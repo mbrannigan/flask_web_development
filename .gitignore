@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+
+# Environment variables / secrets
+*.env
+.env.*
+
+# Flask instance folder (contains uploads, local DBs, etc.)
+instance/
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# Compiled assets
+*.sass-cache
+*.css.map
+*.js.map
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS / Windows cruft
+.DS_Store
+Thumbs.db
+
+# Coverage / testing
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# Build artifacts
+build

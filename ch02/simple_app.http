@@ -1,0 +1,33 @@
+
+### Basic request for homepage
+GET http://localhost:5000/ HTTP/1.1
+
+### Basic user request
+GET http://localhost:5000/user/mike HTTP/1.1
+
+### the user view as written has some issues...
+# Since we are reflecting back the raw user input, the user view is vulnerable
+
+### 'name' with a '/' is only vulnerable if you have the parameter allowing
+#   the use of paths.  e.g. @app.route("/user/<path:name>")
+#   The reason for this is when the parameter has 'path', Werkzeug
+#   decodes %2F → / before routing
+GET http://localhost:5000/user/%3Cscript%3Ealert%28%22oops%21%22%29%3B%3C%2Fscript%3E HTTP/1.1
+
+### 'name' without a '/' is still vulnerable because you can still pass in Javascript
+#   that doesn't require slashes
+GET http://localhost:5000/user/%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E HTTP/1.1
+
+### Some fixes for this
+# user.html: <h1>Hello, {{ name }}</h1>  # Jinja auto-escapes
+# return f"<h1>Hello, {escape(name)}</h1>"
+# or
+# resp = make_response(render_template("user.html", name=name))
+# resp.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+# return resp
+
+
+### If 'name' was a query parameter and we were still reflecting
+#   raw user input, we can even send along parameters with embedded
+#   '/' characters for full paths.
+GET http://localhost:5000/user?name=%3Cscript%3Ealert(1)%3C%2Fscript%3E HTTP/1.1
