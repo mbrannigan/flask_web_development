@@ -7,5 +7,6 @@ app = Flask(__name__)
 def index():
     response = make_response("<p>This is the response</p>")
     response.headers.add("foo", "bar")
+    response.set_cookie("fruit", "apple")
     response.status_code = 200
     return response
